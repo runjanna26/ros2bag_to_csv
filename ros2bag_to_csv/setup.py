@@ -21,7 +21,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'ros2bag_to_csv=ros2bag_to_csv.ros2bag_to_csv:main'
+            'ros2bag_to_csv=ros2bag_to_csv.ros2bag_to_csv:main',
+            'csv_to_json=ros2bag_to_csv.csv_to_json:main'
         ],
     },
 )
