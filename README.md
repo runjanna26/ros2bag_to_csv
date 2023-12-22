@@ -34,9 +34,6 @@ I would like to express my gratitude to the owner of [fishros/ros2bag_convert](h
 Thank you to [Owner's Name] for their dedication and hard work on this project.
 
 
-## Author of this repo
-run.janna@gmail.com
-
 ## Version Record
 - 20231222-V0.1.0
   - Completed basic conversion function
