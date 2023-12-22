@@ -27,7 +27,14 @@ ros2 run ros2bag_to_csv ros2bag_to_csv
 ```
 3. CSV files and folders will be generate to this directory
 
-## Author
+## Acknowledgments
+
+I would like to express my gratitude to the owner of [fishros/ros2bag_convert](https://github.com/fishros/ros2bag_convert) for their invaluable contributions to the open-source community.
+
+Thank you to [Owner's Name] for their dedication and hard work on this project.
+
+
+## Author of this repo
 run.janna@gmail.com
 
 ## Version Record
