@@ -35,14 +35,16 @@ def convert_df_to_dict(df, column_name):
       data_list.append({'val': val, 'ts': ts})
    return {column_name: data_list}
 
+
+
 def convert_timestamp_str_to_datetime(timestamp_str):
    '''
-      Convert string of time from ros2bag to datetime object 
-      - ros2bag record with nano second type
+   Convert string of time from ros2bag to datetime object 
+   - ros2bag record with nano second type
    '''
-   date_part, microsecond_part = timestamp_str.split('.')      # Split the timestamp string into the part before and after the decimal point
-   microsecond_part = int(int(microsecond_part)/1000.0)        # Pad the microsecond part with zeros to ensure it has exactly 9 digits
-   timestamp_str_modified = f"{date_part}.{microsecond_part}"  # Combine the date part and the modified microsecond part
+   date_part, nanosecond_part = timestamp_str.split('.')      
+   microsecond = str(int(float(nanosecond_part)//1000.0)).zfill(6)
+   timestamp_str_modified = f"{date_part}.{microsecond}"  # Combine the date part and the modified microsecond part
    datetime_obj = datetime.strptime(timestamp_str_modified, "%Y/%m/%d %H:%M:%S.%f")
    return datetime_obj
 
@@ -59,7 +61,7 @@ def main(args=None):
          df = pd.read_csv(os.path.join(directory_path, csv_file))
          dfs[prefix] = df
       print('===========================================')
-
+      
       for i in range(len(topic_name)):
          result_list.append(convert_df_to_dict(dfs[topic_name[i]], topic_name[i]))
          

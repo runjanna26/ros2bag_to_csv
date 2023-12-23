@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 import csv
 import json
@@ -8,10 +7,9 @@ import numpy as np
 def save_csv_file(data, csv_file_name, version=0, print_out=False):
     """ Save data to a csv_file_name (use it after 'read_from_all_topics').
     """
-    
+
     # Create csv file
     with open(csv_file_name, mode='w') as csv_file:
-
         field_names = ['topic_name', 'topic_type', 'time_stamp', 'message']
         writer = None
 
@@ -24,5 +22,8 @@ def save_csv_file(data, csv_file_name, version=0, print_out=False):
                 writer = csv.DictWriter(csv_file,fieldnames=field_names)
                 writer.writeheader()
             row_data["time"] = row_time
+
             writer.writerow(row_data)
+            
+    # if print_out:
     print('Saving', csv_file_name)
