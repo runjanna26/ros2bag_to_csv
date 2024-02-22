@@ -1,4 +1,6 @@
 from setuptools import setup
+import os
+from glob import glob
 
 package_name = 'ros2bag_to_csv'
 submodules = "ros2bag_to_csv/include"
@@ -8,9 +10,9 @@ setup(
     version='0.0.0',
     packages=[package_name, submodules],
     data_files=[
-        ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
+        ('share/ament_index/resource_index/packages',['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -22,7 +24,9 @@ setup(
     entry_points={
         'console_scripts': [
             'ros2bag_to_csv=ros2bag_to_csv.ros2bag_to_csv:main',
-            'csv_to_json=ros2bag_to_csv.csv_to_json:main'
+            'csv_to_json_ros1=ros2bag_to_csv.csv_to_json_ros1:main',
+            'csv_to_json_ros2=ros2bag_to_csv.csv_to_json_ros2:main'
+
         ],
     },
 )

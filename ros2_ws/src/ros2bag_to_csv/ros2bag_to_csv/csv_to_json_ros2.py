@@ -42,10 +42,11 @@ def convert_timestamp_str_to_datetime(timestamp_str):
    Convert string of time from ros2bag to datetime object 
    - ros2bag record with nano second type
    '''
-   date_part, nanosecond_part = timestamp_str.split('.')      
+   date_part, nanosecond_part = timestamp_str.split('.')  
    microsecond = str(int(float(nanosecond_part)//1000.0)).zfill(6)
-   timestamp_str_modified = f"{date_part}.{microsecond}"  # Combine the date part and the modified microsecond part
-   datetime_obj = datetime.strptime(timestamp_str_modified, "%Y/%m/%d %H:%M:%S.%f")
+   timestamp_str_modified = f"{date_part}.{microsecond}"  
+   datetime_obj = datetime.strptime(timestamp_str_modified, "%Y/%m/%d %H:%M:%S.%f")   
+   
    return datetime_obj
 
 def main(args=None):
@@ -93,7 +94,10 @@ def main(args=None):
 class MinimalPublisher(Node):
 
     def __init__(self):
-        super().__init__('csv_to_json_node')
+      super().__init__('csv_to_json_node')
+      # my_param = self.get_parameter('/ros_version').get_parameter_value().string_value
+
+      # self.get_logger().info('Hello %s!' % my_param)
         
 
 
