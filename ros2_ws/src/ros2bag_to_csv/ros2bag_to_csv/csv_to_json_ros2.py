@@ -16,6 +16,7 @@ argc = len(argvs)
 
 dfs = {}
 topic_name = []
+null_topic_name = []
 result_list = []
 name_json_file = ''
 def list_csv_files(directory_path="."):
@@ -39,7 +40,7 @@ def convert_df_to_dict(df, column_name):
 
 def convert_timestamp_str_to_datetime(timestamp_str):
    '''
-   Convert string of time from ros2bag to datetime object 
+   Convert string of time from ros2bag to datetime object
    - ros2bag record with nano second type
    '''
    date_part, nanosecond_part = timestamp_str.split('.')  
@@ -55,12 +56,23 @@ def main(args=None):
       print("===[List of .csv files in the directory]===")
       for csv_file in csv_files:
          print(csv_file)
-         # print(csv_file.split('-')[1].replace(".csv", ""))
-         topic_name.append(csv_file.split('-')[1].replace(".csv", ""))
-         name_json_file = csv_file.split('-')[0].replace(".db3", "")
-         prefix = csv_file.split('-')[1].replace(".csv", "")
-         df = pd.read_csv(os.path.join(directory_path, csv_file))
-         dfs[prefix] = df
+
+         file_path = os.path.join(directory_path, csv_file)
+         file_size = os.path.getsize(file_path)  # Get size of CSV file
+
+         threshold_size = 0  # 0 MB == empty file
+         if file_size > threshold_size:  # Check if file size is greater than threshold
+            df = pd.read_csv(file_path)
+   
+            topic_name.append(csv_file.split('-')[1].replace(".csv", ""))
+            name_json_file = csv_file.split('-')[0].replace(".db3", "")
+            prefix = csv_file.split('-')[1].replace(".csv", "")
+
+            dfs[prefix] = df
+         else:
+            null_topic_name.append(csv_file.split('-')[1].replace(".csv", ""))
+      print("===[List of EMPTY topic]===")
+      print(null_topic_name)
       print('===========================================')
       
       for i in range(len(topic_name)):
