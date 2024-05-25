@@ -7,6 +7,7 @@ import sys
 import pandas as pd
 from datetime import datetime
 import json
+import ast
 
 directory_path = '.'
 
@@ -23,19 +24,50 @@ def list_csv_files(directory_path="."):
     csv_files = [filename for filename in os.listdir(directory_path) if filename.endswith(".csv")]
     return csv_files
 
-def convert_df_to_dict(df, column_name):
+def convert_df_to_dict(df, topic_name):
    '''
    - convert dataframe to dictionary change string type to float type of data
    - convert datetime to second according to record time
    '''
-   init_ts = convert_timestamp_str_to_datetime(df['time'][0])
-   data_list = []
-   for i in range(len(df['time'])):
-      val = [float(j) for j in df['data'][i][1:-1].split(', ')]
-      ts = (convert_timestamp_str_to_datetime(df['time'][i]) - init_ts).total_seconds()
-      data_list.append({'val': val, 'ts': ts})
-   return {column_name: data_list}
+   
 
+   # List column names
+   column_names = df.columns.tolist()
+   # print(column_names)
+   
+
+
+   if 'data' in column_names: # MultiArray msg
+      init_ts = convert_timestamp_str_to_datetime(df['time'][0])
+      data_list = []
+      for i in range(len(df['time'])):
+         val = [float(j) for j in df['data'][i][1:-1].split(', ')]
+         ts = (convert_timestamp_str_to_datetime(df['time'][i]) - init_ts).total_seconds()
+         data_list.append({'val': val, 'ts': ts})
+      return {topic_name: data_list}
+  
+   elif 'orientation' in column_names:
+      data_dict = {}
+      init_ts = convert_timestamp_str_to_datetime(df['time'][0])
+
+      for column_name in ['orientation', 'angular_velocity', 'linear_acceleration']:
+         sub_data_list = [{'val': ast.literal_eval(df[column_name][i]), 
+                             'ts': (convert_timestamp_str_to_datetime(df['time'][i]) - init_ts).total_seconds()} 
+                            for i in range(len(df['time']))]
+         data_dict[column_name] = sub_data_list
+
+      return {topic_name: data_dict}
+   
+   # elif 'orientation' in column_names:
+   #    data_list = []
+   #    for column_name in ['orientation', 'angular_velocity', 'linear_acceleration']:
+   #       init_ts = convert_timestamp_str_to_datetime(df['time'][0])
+   #       sub_data_list = [{'val': ast.literal_eval(df[column_name][i]), 
+   #                        'ts': (convert_timestamp_str_to_datetime(df['time'][i]) - init_ts).total_seconds()} 
+   #                       for i in range(len(df['time']))]
+   #       data_list.append({column_name: sub_data_list})
+   #       print(data_list)
+   #    return {topic_name: data_list}
 
 
 def convert_timestamp_str_to_datetime(timestamp_str):
