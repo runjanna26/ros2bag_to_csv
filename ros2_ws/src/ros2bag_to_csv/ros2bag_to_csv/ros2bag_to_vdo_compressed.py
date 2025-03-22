@@ -7,13 +7,20 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import CompressedImage
 from rclpy.serialization import deserialize_message
 from rosidl_runtime_py.utilities import get_message
-
+from rclpy.node import Node
 import os
 
+from .include.read_bag import *
+
+
+'''
+How to extract vdo from ros2 bag (foxy)
+
+$ cd .db3 directory folder
+$ ros2 run ros2bag_to_csv ros2bag_to_vdo_compressed --ros-args -p topic:=/HERO/InspectionCamera/stream_images -p fps:=10
+'''
+
 # Configuration
-BAG_FILE        = os.path.expanduser("/media/runj/RunJ SSD/RunJ/VISTEC/0_Industrials Projects/4_Project_Freelander_HERO/HERO REC DEMO/Day3/rosbag/mt_demo_rec_day3_1/mt_demo_rec_day3_1_0.db3")
-IMAGE_TOPIC     = "/HERO/InspectionCamera/stream_images"
-OUTPUT_VIDEO    = "output.mp4"
 FPS = 10  # Adjust FPS as needed
 
 bridge = CvBridge()
@@ -76,9 +83,40 @@ def extract_and_save_video(bag_file, image_topic, output_video, fps):
     conn.close()
     print("[INFO] Video saved successfully.")
 
-def main():
-    rclpy.init()
-    extract_and_save_video(BAG_FILE, IMAGE_TOPIC, OUTPUT_VIDEO, FPS)
+def main(args=None):
+    topic_name = None
+    fps = None
+
+    db3_file = find_db3_file()
+    if db3_file:
+        print(f"The .db3 file found is: {db3_file}")
+    else:
+        print("No .db3 file found in the directory.")
+
+    
+    rclpy.init(args=args)
+    node = Node("ros2bag_to_vdo_compressed")  # Create a Node instance
+
+    # Read the topic parameter
+    node.declare_parameter('topic', None)
+    node.declare_parameter('fps', 0)
+    if node.has_parameter("topic"):  
+        topic_name = node.get_parameter("topic").value
+    else:
+        print("[ERROR] Missing parameter: topic")
+        return
+    
+    
+    if node.has_parameter("fps"):  
+        fps = node.get_parameter("fps").value
+    else:
+        print("[ERROR] Missing parameter: fps")
+        return
+
+    print(f"[INFO] Extracting from topic: {topic_name} with {fps} FPS")
+
+    extract_and_save_video(db3_file, topic_name, db3_file.split(".")[0] + '.mp4', fps)
+    node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == "__main__":

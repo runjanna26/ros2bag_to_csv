@@ -25,7 +25,8 @@ setup(
         'console_scripts': [
             'ros2bag_to_csv=ros2bag_to_csv.ros2bag_to_csv:main',
             'csv_to_json_ros1=ros2bag_to_csv.csv_to_json_ros1:main',
-            'csv_to_json_ros2=ros2bag_to_csv.csv_to_json_ros2:main'
+            'csv_to_json_ros2=ros2bag_to_csv.csv_to_json_ros2:main',
+            'ros2bag_to_vdo_compressed=ros2bag_to_csv.ros2bag_to_vdo_compressed:main'
 
         ],
     },
