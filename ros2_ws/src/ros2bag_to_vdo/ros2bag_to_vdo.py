@@ -12,8 +12,8 @@ import os
 
 
 # Configuration
-BAG_FILE        = os.path.expanduser("~/Documents/HERO_ros2bag_vdo/visual_dynamic_demo_rec_12/visual_dynamic_demo_rec_12_0.db3")
-IMAGE_TOPIC     = "/HERO/InspectionCamera/stream_images"
+BAG_FILE        = os.path.expanduser("/home/refine2/refine_ros2bags/refine_bag_20250703_134401/refine_bag_20250703_134401_0.db3")
+IMAGE_TOPIC     = "/camera1/image_compressed"
 OUTPUT_VIDEO    = "output.mp4"
 FPS = 10  # Adjust FPS as needed
 
